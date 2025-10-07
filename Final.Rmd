@@ -1,0 +1,715 @@
+---
+title: "Math Final"
+output: html_document
+date: "2024-12-06"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+df <- data.frame(
+  x_1 = c(276.2, 251.6, 192.7, 246.2, 291.7, 466.5, 258.6, 453.4, 158.5, 324.8),
+  x_2 = c(324.5, 287.3, 433.2, 232.4, 311.0, 158.9, 327.4, 365.5, 271.0, 406.5),
+  x_3 = c(158.6, 349.5, 289.9, 243.7, 502.4, 223.5, 432.1, 357.6, 410.2, 235.7),
+  x_4 = c(412.5, 297.4, 366.3, 372.5, 254.0, 425.1, 403.9, 258.1, 344.2, 288.2),
+  x_5 = c(292.8, 227.8, 466.2, 460.4, 245.6, 251.4, 256.6, 278.8, 250.0, 192.6),
+  x_6 = c(258.4, 453.6, 239.1, 158.9, 324.8, 321.0, 282.9, 467.2, 360.7, 284.9),
+  x_7 = c(334.1, 321.5, 357.4, 298.7, 401.0, 315.4, 389.7, 355.2, 376.4, 290.5),
+  x_8 = c(303.2, 451.0, 219.7, 314.5, 266.5, 317.4, 413.2, 228.5, 179.4, 343.7),
+  x_9 = c(292.9, 466.2, 245.7, 256.6, 251.3, 246.2, 466.5, 453.6, 159.2, 283.4),
+  x_10 = c(243.2, 307.5, 411.1, 327.0, 289.9, 277.5, 199.3, 315.6, 342.4, 281.2),
+  x_11 = c(159.7, 421.1, 357.0, 296.5, 255.4, 304.2, 282.1, 456.3, 331.2, 243.7),
+  x_12 = c(331.2, 455.1, 353.2, 423.0, 362.1, 410.7, 387.6, 407.2, 377.7, 411.1)
+)
+
+matrix <- as.matrix(df)
+matrix_scaled <- scale(as.matrix(df), center = TRUE, scale = TRUE)
+
+matrix_scaled
+
+```
+
+
+```{r}
+pca <- prcomp(matrix, center = TRUE, scale. = TRUE)
+summary(pca)
+loadings <- pca$rotation
+loadings
+```
+
+
+```{r}
+
+
+corrmat <- cor(matrix)
+corrmat
+
+
+
+```
+
+
+```{r}
+
+
+ev <- eigen(corrmat)
+ev
+
+ev_matrix <- diag(ev$values)
+ev_matrix
+
+```
+
+
+```{r}
+corrmat_test1 <- cor(matrix)
+ev_test <- eigen(corrmat_test1)
+ev_test
+
+#find station that has the highest magnitude in the eigenvector associated with the smallest eigenvalue
+#remove that station
+#divide eigenvalue for that eigenvector by the sum of the eigenvalues to find the percentage of information lost
+#repeat process, recomputing correlation matrix without the removed station
+
+
+#(1 - (smallest eigenvalue / sum(eigenvalues))) * 100
+```
+
+
+```{r}
+
+
+matrix_7 <- matrix[, -c(5)]
+corrmat_7 <- cor(matrix_7)
+ev_7 <- eigen(corrmat_7)
+ev_7
+
+
+```
+
+
+
+
+```{r}
+
+ev
+
+matrix_7 <- matrix[, -c(7)]
+corrmat_7 <- cor(matrix_7)
+ev_7 <- eigen(corrmat_7)
+ev_7
+
+matrix_7_9 <- matrix[, -c(7, 9)]
+corrmat_7_9 <- cor(matrix_7_9)
+ev_7_9 <- eigen(corrmat_7_9)
+#ev_7_9
+
+matrix_7_9_11 <- matrix[, -c(7, 9, 11)]
+corrmat_7_9_11 <- cor(matrix_7_9_11)
+ev_7_9_11 <- eigen(corrmat_7_9_11)
+#ev_7_9_11
+
+matrix_7_9_11_10 <- matrix[, -c(7, 9, 10, 11)]
+corrmat_7_9_11_10 <- cor(matrix_7_9_11_10)
+ev_7_9_11_10 <- eigen(corrmat_7_9_11_10)
+#ev_7_9_11_10
+
+matrix_7_9_11_10_12 <- matrix[, -c(7, 9, 10, 11, 12)]
+corrmat_7_9_11_10_12 <- cor(matrix_7_9_11_10_12)
+ev_7_9_11_10_12 <- eigen(corrmat_7_9_11_10_12)
+#ev_7_9_11_10_12
+
+matrix_7_9_11_10_12_4 <- matrix[, -c(4, 7, 9, 10, 11, 12)]
+corrmat_7_9_11_10_12_4 <- cor(matrix_7_9_11_10_12_4)
+ev_7_9_11_10_12_4 <- eigen(corrmat_7_9_11_10_12_4)
+#ev_7_9_11_10_12_4
+
+matrix_7_9_11_10_12_4_6_5 <- matrix[, -c(4, 5, 6, 7, 9, 10, 11, 12)]
+corrmat_7_9_11_10_12_4_6_5 <- cor(matrix_7_9_11_10_12_4_6_5)
+ev_7_9_11_10_12_4_6_5 <- eigen(corrmat_7_9_11_10_12_4_6_5)
+#ev_7_9_11_10_12_4_6_5
+
+```
+
+
+```{r}
+# Original matrix
+matrix <- as.matrix(df)
+
+# Function to calculate the percentage change in total variance
+calculate_percentage_change <- function(data, remove_col) {
+  original_variance <- sum(eigen(cor(data))$values)               # Original variance
+  reduced_matrix <- data[, -remove_col, drop = FALSE]            # Remove the column
+  reduced_variance <- sum(eigen(cor(reduced_matrix))$values)     # Variance after removal
+  percentage_change <- ((original_variance - reduced_variance) / original_variance) * 100  # Percent change
+  return(percentage_change)
+}
+
+# Iterative removal process
+removed_stations <- c()  # To store removed station names
+remaining_matrix <- matrix  # Start with the full matrix
+
+while (ncol(remaining_matrix) > 6) {  # Stop when only 6 stations remain
+  percentage_changes <- sapply(seq_len(ncol(remaining_matrix)), function(col) {
+    calculate_percentage_change(remaining_matrix, col)
+  })
+  
+  # Identify station causing the smallest percentage drop
+  station_to_remove <- which.min(percentage_changes)
+  removed_station_name <- colnames(remaining_matrix)[station_to_remove]
+  removed_stations <- c(removed_stations, removed_station_name)
+  
+  # Update the matrix by removing the identified column
+  remaining_matrix <- remaining_matrix[, -station_to_remove, drop = FALSE]
+  
+  # Print iteration details
+  cat("Removed Station:", removed_station_name, 
+      "| % Change in Variance:", percentage_changes[station_to_remove], "\n")
+}
+
+# Final output
+cat("Removed Stations:", removed_stations, "\n")
+cat("Remaining Stations:", colnames(remaining_matrix), "\n")
+
+
+```
+
+
+```{r}
+
+original_eigen = sum(eigen(corrmat)$values[1:5])
+change_matrix = matrix
+
+test_mat = matrix[, -1]
+
+min_change = Inf
+max_retained = -Inf
+drop_station = NA
+drop_station_inf_based = NA
+
+  
+  for (i in 1:ncol(matrix)) {
+    corrmat_test = cor(matrix[, -i])
+    
+    eig_test = sum(eigen(corrmat_test)$values[1:5])
+    
+    change = (eig_test - original_eigen) / original_eigen
+  
+    
+    if (abs(change) < abs(min_change)) {
+      min_change = change
+      drop_station = colnames(matrix)[i]
+      station_index_variance = i
+    }
+    
+  }
+  
+  
+  
+  for (u in 1:ncol(matrix)) {
+    new_corrmat = cor(change_matrix[, -u])
+    eig_new = sum(eigen(new_corrmat)$values[1:5])
+    info_retained = (eig_new / original_eigen) * 100
+  
+    #print(info_retained)
+    
+    if (info_retained > max_retained) {
+      max_retained = info_retained
+      drop_station_inf_based = colnames(matrix)[u]
+      station_index_info = u
+    }
+    
+  }
+
+cat("Station to drop based on Variance: ", drop_station)
+cat("\nStation to drop based on Info Retention: ", drop_station_inf_based)
+cat("\nPercentage of information retained: ", max_retained, "%\n\n")
+
+#change_matrix = change_matrix[, -colnames(matrix)[station_index_info]]
+
+
+
+```
+
+```{r}
+original_eigen = sum(eigen(corrmat)$values[1:5])
+change_matrix = matrix
+
+for (k in 1:7) {
+
+min_change = Inf
+max_retained = -Inf
+drop_station = NA
+drop_station_inf_based = NA
+  
+  for (i in 1:ncol(change_matrix)) {
+    corrmat_test = cor(change_matrix[, -i])
+    
+    eig_test = sum(eigen(corrmat_test)$values[1:5])
+    
+    change = (eig_test - original_eigen) / original_eigen
+  
+    
+    if (abs(change) < abs(min_change)) {
+      min_change = change
+      drop_station = colnames(change_matrix)[i]
+      station_index_variance = i
+    }
+    
+  }
+  
+  
+  
+  for (u in 1:ncol(change_matrix)) {
+    new_corrmat = cor(change_matrix[, -u])
+    eig_new = sum(eigen(new_corrmat)$values[1:5])
+    info_retained = (eig_new / original_eigen) * 100
+  
+    #print(info_retained)
+    
+    if (info_retained > max_retained) {
+      max_retained = info_retained
+      drop_station_inf_based = colnames(change_matrix)[u]
+      station_index_info = u
+    }
+    
+  }
+
+cat("Station to drop based on Variance: ", drop_station)
+cat("\nStation to drop based on Info Retention: ", drop_station_inf_based)
+cat("\nPercentage of information retained: ", max_retained, "%\n\n")
+
+
+station_index_numeric <- which(colnames(change_matrix) == colnames(change_matrix)[station_index_info])
+
+change_matrix <- change_matrix[, -station_index_numeric]
+
+}
+
+
+```
+
+
+```{r}
+change_matrix = matrix
+original_eigen = sum(eigen(corrmat)$values[1:12])
+
+
+for (k in 1:7) {
+
+min_change = Inf
+max_retained = -Inf
+drop_station = NA
+drop_station_inf_based = NA
+  
+  for (i in 1:ncol(change_matrix)) {
+    corrmat_test = cor(change_matrix[, -i])
+    
+    eig_test = sum(eigen(corrmat_test)$values[1:ncol(change_matrix)])
+    
+    change = (eig_test - original_eigen) / original_eigen
+  
+    
+    if (abs(change) < abs(min_change)) {
+      min_change = change
+      drop_station = colnames(change_matrix)[i]
+      station_index_variance = i
+    }
+    
+  }
+  
+  
+  
+  for (u in 1:ncol(change_matrix)) {
+    new_corrmat = cor(change_matrix[, -u])
+    eig_new = sum(eigen(new_corrmat)$values[1:ncol(change_matrix)])
+    info_retained = (eig_new / original_eigen) * 100
+  
+    #print(info_retained)
+    
+    if (info_retained > max_retained) {
+      max_retained = info_retained
+      drop_station_inf_based = colnames(change_matrix)[u]
+      station_index_info = u
+    }
+    
+  }
+
+cat("Station to drop based on Variance: ", drop_station)
+cat("\nStation to drop based on Info Retention: ", drop_station_inf_based)
+cat("\nPercentage of information retained: ", max_retained, "%\n\n")
+
+
+station_index_numeric <- which(colnames(change_matrix) == colnames(change_matrix)[station_index_info])
+
+change_matrix <- change_matrix[, -station_index_numeric]
+
+}
+
+```
+
+```{r}
+change_matrix = matrix
+original_eigen = sum(eigen(corrmat)$values[1:12])
+
+
+#for (k in 1:7) {
+
+min_change = Inf
+max_retained = -Inf
+drop_station = NA
+drop_station_inf_based = NA
+  
+  for (i in 1:ncol(change_matrix)) {
+    corrmat_test = cor(change_matrix[, -i])
+    
+    eig_test = sum(eigen(corrmat_test)$values[1:ncol(change_matrix)])
+    
+    change = (eig_test - original_eigen) / original_eigen
+  
+    
+    #if (abs(change) < abs(min_change)) {
+    #  min_change = change
+    #  drop_station = colnames(change_matrix)[i]
+    #  station_index_variance = i
+    #}
+    
+    station_index_numeric <- which(colnames(change_matrix) == colnames(change_matrix)[station_index_info])
+
+    change_matrix <- change_matrix[, -station_index_numeric]
+    
+  }
+
+```
+
+
+```{r}
+change_matrix = matrix
+original_eigen = sum(eigen(corrmat)$values[1:12])
+
+
+
+min_change = Inf
+max_retained = -Inf
+drop_station = NA
+drop_station_inf_based = NA
+
+
+  for (n in 1:8) {
+   
+    corrmat_x = cor(change_matrix)
+    
+    eigen_matrix = eigen(corrmat_x)
+    
+    ev_vector_min_n = which.min(eigen_matrix$values)
+    ev_vector_min = eigen_matrix$vectors[, ev_vector_min_n]
+    
+    eigen_max = max(abs(ev_vector_min))
+    #print(eigen_max)
+    
+    change1 = (min(eigen_matrix$values) - sum(eigen_matrix$values)) / sum(eigen_matrix$values) * 100 * -1
+    
+    u = 13-n
+    change_matrix = change_matrix[, -u]
+    
+   cat("Information retained: ", change1, "%\n")
+}
+    
+```
+    ev_temp = sum(eigen(corrmat_x)$values[1:ncol(corrmat_x)])
+    
+    ev_vector_min_n = which.min(eigen_matrix$values)
+    ev_vector_min = eigen_matrix$vectors[, ev_vector_min_n]
+    
+    eigen_max = max(abs(ev_vector_min))
+    
+    print(eigen_max)
+
+    
+        # Compute eigenvalues and eigenvectors
+    eigen_result <- eigen(cor(change_matrix))
+    
+    # Find the smallest eigenvalue and its corresponding eigenvector
+    smallest_eigen_index <- which.min(eigen_result$values)
+    smallest_eigen_vector <- eigen_result$vectors[, smallest_eigen_index]
+    
+    # Compute the largest absolute value in the eigenvector
+    eigen_max <- max(abs(smallest_eigen_vector))
+    
+    # Print the result
+    cat("Largest absolute value of the eigenvector corresponding to the smallest eigenvalue:", eigen_max, "\n")
+    
+    
+    
+    #print(ev_temp)
+    #change = ()
+  }
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+original_eigen = sum(eigen(corrmat)$values[1:5])
+change_matrix = matrix
+
+#number of stations to remove
+stations_to_remove_count = 3
+
+
+if (ncol(change_matrix) < stations_to_remove_count) {
+  print("Not Enough Stations.")
+  
+  } else {
+    
+    # Generate combinations of stations to remove
+    station_combinations = combn(1:ncol(change_matrix), 
+                                 stations_to_remove_count, simplify = FALSE)
+  
+    # Initialize the best combination tracking
+    best_combination = NULL
+    max_retained = -Inf
+    min_change = Inf
+  
+    # Loop over each combination of stations to remove
+    for (comb in station_combinations) {
+      
+      
+      corrmat_test = cor(change_matrix[, -comb], use = "pairwise.complete.obs")
+      eig_test = sum(eigen(corrmat_test)$values[1:5])
+  
+      
+      change = (eig_test - original_eigen) / original_eigen
+  
+      
+      info_retained = (eig_test / original_eigen) * 100
+  
+      
+      if (info_retained > max_retained) {
+        max_retained = info_retained
+        best_combination = comb
+      }
+    }
+
+  
+  cat("Best combination of stations to drop:\n")
+  cat("Columns to remove: ", colnames(change_matrix)[best_combination], "\n")
+  cat("Percentage of information retained: ", max_retained, "%\n")
+}
+
+
+```
+
+
+
+```{r}
+  original_pca <- prcomp(change_matrix, scale. = TRUE)
+  reduced_matrix <- change_matrix[, -which(colnames(change_matrix) == "x_1")]
+  reduced_pca <- prcomp(reduced_matrix, scale. = TRUE)
+
+original_variance <- sum(original_pca$sdev[1:5]^2) / sum(original_pca$sdev^2)
+reduced_variance <- sum(reduced_pca$sdev[1:5]^2) / sum(reduced_pca$sdev^2)
+
+cat("Original Variance Explained (First 5 PCs):", original_variance * 100, "%\n")
+cat("Reduced Variance Explained (First 5 PCs):", reduced_variance * 100, "%\n")
+```
+
+
+
+```{r}
+original_eigen = sum(eigen(corrmat)$values[1:5])
+change_matrix = matrix
+variance_changes = numeric()
+
+for (k in 1:7) {
+
+min_change = Inf
+max_retained = -Inf
+drop_station = NA
+drop_station_inf_based = NA
+  
+  for (i in 1:ncol(change_matrix)) {
+    corrmat_test = cor(change_matrix[, -i])
+    
+    eig_test = sum(eigen(corrmat_test)$values[1:5])
+    
+    change = (eig_test - original_eigen) / original_eigen
+  
+    
+    if (abs(change) < abs(min_change)) {
+      min_change = change
+      drop_station = colnames(change_matrix)[i]
+      station_index_variance = i
+    }
+    
+  }
+  
+  
+  
+  for (u in 1:ncol(change_matrix)) {
+    new_corrmat = cor(change_matrix[, -u])
+    eig_new = sum(eigen(new_corrmat)$values[1:5])
+    info_retained = (eig_new / original_eigen) * 100
+  
+    #print(info_retained)
+    
+    if (info_retained > max_retained) {
+      max_retained = info_retained
+      drop_station_inf_based = colnames(change_matrix)[u]
+      station_index_info = u
+    }
+    
+  }
+
+  # Calculate and store variance change after station removal
+  new_corrmat = cor(change_matrix[, -station_index_info])
+  new_eigen_sum = sum(eigen(new_corrmat)$values[1:5])
+  variance_change = ((original_eigen - new_eigen_sum) / original_eigen) * 100
+  variance_changes = c(variance_changes, variance_change)
+
+  # Display results for the current step
+  cat("Step:", k, "\n")
+  cat("Station to drop based on Variance: ", drop_station, "\n")
+  cat("Station to drop based on Info Retention: ", drop_station_inf_based, "\n")
+  cat("Percentage of information retained: ", max_retained, "%\n")
+  cat("Percentage change in variance: ", variance_change, "%\n\n")
+
+station_index_numeric <- which(colnames(change_matrix) 
+                               == colnames(change_matrix)[station_index_info])
+
+change_matrix <- change_matrix[, -station_index_numeric]
+
+}
+
+
+
+#cat("Station to drop based on Variance: ", drop_station)
+#cat("\nStation to drop based on Info Retention: ", drop_station_inf_based)
+#cat("\nPercentage of information retained: ", max_retained, "%\n\n")
+```
+
+
+
+```{r}
+original_eigen = sum(eigen(corrmat)$values[1:5])
+change_matrix = matrix
+variance_changes = numeric()  # Store percentage changes in variance
+
+for (k in 1:7) {
+  
+  min_retention_loss = Inf
+  drop_station = NA
+  
+  for (i in 1:ncol(change_matrix)) {
+    # Calculate the correlation matrix without the station
+    corrmat_test = cor(change_matrix[, -i])
+    
+    # Calculate eigenvalues
+    eigenvalues_test = eigen(corrmat_test)$values
+    retention_loss = eigenvalues_test[length(eigenvalues_test)] / sum(eigenvalues_test)
+    
+    if (retention_loss < min_retention_loss) {
+      min_retention_loss = retention_loss
+      drop_station = colnames(change_matrix)[i]
+      station_index_info = i
+    }
+  }
+  
+  # Calculate variance change after removal
+  new_corrmat = cor(change_matrix[, -station_index_info])
+  new_eigen_sum = sum(eigen(new_corrmat)$values[1:5])
+  variance_change = ((original_eigen - new_eigen_sum) / original_eigen) * 100
+  variance_changes = c(variance_changes, variance_change)
+  
+  # Display results for the current step
+  cat("Step:", k, "\n")
+  cat("Station to drop based on Data Retention: ", drop_station, "\n")
+  cat("Percentage of information retained: ", (1 - min_retention_loss) * 100, "%\n")
+  cat("Percentage change in variance: ", variance_change, "%\n\n")
+  
+  # Update the matrix by removing the selected station
+  change_matrix <- change_matrix[, -station_index_info]
+}
+
+# Display all recorded percentage changes in variance
+cat("Percentage changes in variance at each step:", variance_changes, "\n")
+```
+
+
+
+```{r}
+# Load required library
+library(ggplot2)
+
+# Original dataset
+df <- data.frame(
+  x_1 = c(276.2, 251.6, 192.7, 246.2, 291.7, 466.5, 258.6, 453.4, 158.5, 324.8),
+  x_2 = c(324.5, 287.3, 433.2, 232.4, 311.0, 158.9, 327.4, 365.5, 271.0, 406.5),
+  x_3 = c(158.6, 349.5, 289.9, 243.7, 502.4, 223.5, 432.1, 357.6, 410.2, 235.7),
+  x_4 = c(412.5, 297.4, 366.3, 372.5, 254.0, 425.1, 403.9, 258.1, 344.2, 288.2),
+  x_5 = c(292.8, 227.8, 466.2, 460.4, 245.6, 251.4, 256.6, 278.8, 250.0, 192.6),
+  x_6 = c(258.4, 453.6, 239.1, 158.9, 324.8, 321.0, 282.9, 467.2, 360.7, 284.9),
+  x_7 = c(334.1, 321.5, 357.4, 298.7, 401.0, 315.4, 389.7, 355.2, 376.4, 290.5),
+  x_8 = c(303.2, 451.0, 219.7, 314.5, 266.5, 317.4, 413.2, 228.5, 179.4, 343.7),
+  x_9 = c(292.9, 466.2, 245.7, 256.6, 251.3, 246.2, 466.5, 453.6, 159.2, 283.4),
+  x_10 = c(243.2, 307.5, 411.1, 327.0, 289.9, 277.5, 199.3, 315.6, 342.4, 281.2),
+  x_11 = c(159.7, 421.1, 357.0, 296.5, 255.4, 304.2, 282.1, 456.3, 331.2, 243.7),
+  x_12 = c(331.2, 455.1, 353.2, 423.0, 362.1, 410.7, 387.6, 407.2, 377.7, 411.1)
+)
+
+# Add station labels explicitly
+df$Station <- paste0("Station_", seq_len(nrow(df)))
+
+# Scale the data (excluding the Station column)
+df_scaled <- scale(df[, -ncol(df)])
+
+# Perform PCA (Principal Component Analysis)
+pca <- prcomp(df_scaled, center = TRUE, scale. = TRUE)
+
+# Perform K-means clustering (with 3 clusters, for example)
+set.seed(123)
+kmeans_result <- kmeans(df_scaled, centers = 3)
+
+# Add the cluster information to the PCA data
+pca_data <- as.data.frame(pca$x)  # Get PCA results (PC1, PC2, etc.)
+pca_data$Cluster <- as.factor(kmeans_result$cluster)
+pca_data$Station <- df$Station  # Add station labels explicitly
+
+# Extract centroids for each cluster (in PCA space)
+centroids_scaled <- kmeans_result$centers
+centroids_pca <- predict(pca, newdata = centroids_scaled)  # Project centroids into PCA space
+centroids_df <- as.data.frame(centroids_pca[, 1:2])  # Use the first two principal components (PC1, PC2)
+colnames(centroids_df) <- c("PC1", "PC2")
+centroids_df$Cluster <- factor(1:3)
+
+# Plot the data with PCA and clustering results
+ggplot(pca_data, aes(x = PC1, y = PC2, color = Cluster, label = Station)) +
+  geom_point(size = 3) +  # Plot the points
+  geom_text(vjust = -1, size = 3) +  # Label each point with its station number
+  geom_point(data = centroids_df, aes(x = PC1, y = PC2, color = Cluster), shape = 4, size = 4, stroke = 2) +  # Plot centroids
+  labs(
+    title = "PCA with K-means Clustering (Stations Labeled)",
+    x = "Principal Component 1",
+    y = "Principal Component 2"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+
+
+```
+
