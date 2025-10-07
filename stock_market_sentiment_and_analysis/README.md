@@ -1,1 +1,2 @@
-
+# Stock Market Sentiment and Analysis
+This project actually appeared in two classes. In my machine learning class we --in conjunction with the professor-- tuned a financial GPT style bot that would analyze media statements on a given stock and determine if it was positive or negative. Then given that sentiment data it would decide whether to purchase or sell a stock. For my data science class this project was more analysis focused, we chose specific stocks and utilized correlation data to make determinations about stock and stock market behavior.
