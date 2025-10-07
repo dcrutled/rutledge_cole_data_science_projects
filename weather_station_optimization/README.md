@@ -1,1 +1,2 @@
-
+# Weather Station Optimization
+This project was the final for my modeling course. We were given a set of weather stations with corresponding data from each one and were asked to determine which stations could be closed down (due to budget cuts) with the smallest loss in data accuracy overall. I did this mostly in R and performed PCA (Principal Component Analysis) to determine which stations' data had the smallest effect on the overall data output.
